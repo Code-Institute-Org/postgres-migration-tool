@@ -25,6 +25,26 @@ You will need to have created a new database on ElephantSQL.
 Ensure that the URLs are copied correctly. Reel2Reel will throw an error if the URL doesn't start with `postgres://`.
 Make sure that you run the process as soon as you copy the Heroku `DATABASE_URL`. Heroku periodically rotates the credentials, which means an old `DATABASE_URL` may not work.
 
+## FAQs
+
+*Can I use this with VSCode?*
+
+Yes, but we'd really prefer you to use it with Gitpod. This repo has the latest versions of the Postgres tools installed to ensure compatibility with Heroku and Render/ElephantSQL. We like VSCode too, but just this once, please use Gitpod.
+
+*I'm a power user. Is there an easier way to use this?*
+
+Absolutely. You can supply the URLs as arguments like so:
+
+`python3 reel2reel.py <Heroku URL> <Render URL>`
+
+*What does it actually do?*
+
+1. Connects to Heroku and dumps the database to a local `dump.sql` file
+2. Modifies the `dump.sql` file so that it contains the database name and username for the new database
+3. Runs the modified `dump.sql` file against the specified Render/ElephantSQL database
+
+Feel free to examine the code and see if you understand how it works.
+
 ## Reel2Reel??
 
 Because we like to <a href="https://www.youtube.com/watch?v=vuo8kD5zF5I" target="_blank">move it, move it.</a>
