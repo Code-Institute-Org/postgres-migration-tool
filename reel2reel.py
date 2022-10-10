@@ -19,7 +19,7 @@ from urllib.parse import urlparse
 
 def split_url(db_url):
     """
-    Performs a cursory check on the URL and then
+    Performs checks on the URL for completeness and then
     parses it using urllib
     """
 
@@ -66,7 +66,7 @@ def do_heroku(h):
         --username={h.username} --dbname={h.path[1:]} -w > dump.sql")
 
     if res != 0:
-        print("An error occurred connecting to Heroku.")
+        print("Error: Cannot connect to Heroku.")
         sys.exit(2)
 
     print("Extraction successful. File saved to dump.sql.")
@@ -85,7 +85,7 @@ def do_render(r):
                 --dbname={r.path[1:]} -w < dump.sql >/dev/null 2>&1")
 
     if res != 0:
-        print("Error uploading the data to ElephantSQL")
+        print("Error: Cannot upload the data to ElephantSQL.")
         sys.exit(2)
 
     print("Upload complete. Please check your ElephantSQL database")
@@ -93,8 +93,7 @@ def do_render(r):
 
 def main(h_url, r_url):
     """
-    The main function. Connects to Heroku and ElephantSQL
-    using built-in Postgres functions
+    The main function. Calls other functions to perform the migration
     """
 
     h = split_url(h_url)
