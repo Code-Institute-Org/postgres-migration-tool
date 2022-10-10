@@ -1,5 +1,6 @@
 """
 Reel2Reel - a script to move a database from Heroku to Render
+because we like to move it, move it.
 
 Usage:
     python3 reel2reel.py <Heroku URL> <Render URL>
@@ -25,8 +26,14 @@ def split_url(db_url):
     if db_url[0:11] != "postgres://":
         print("Error: The URL seems incorrectly formatted.")
         sys.exit(1)
-    
-    return urlparse(db_url)
+
+    r = urlparse(db_url)
+
+    if not r.hostname or not r.username or not r.password or not r.path:
+        print("Error: The URL seems incorrectly formatted.")
+        sys.exit(1)
+
+    return r
 
 
 def parse_dump(h_user, h_db, r_user, r_db):
@@ -34,54 +41,72 @@ def parse_dump(h_user, h_db, r_user, r_db):
     Takes the dumped SQL file and replaces the database details
     with the new user and database
     """
-    
-    with open("dump.sql", "r") as f:
+
+    with open("dump.sql", "r", encoding="utf8") as f:
 
         data = f.read()
 
         data = re.sub(h_user, r_user, data)
         data = re.sub(h_db, r_db, data)
-    
-    with open("dump.sql", "w") as f:
+
+    with open("dump.sql", "w", encoding="utf8") as f:
         f.write(data)
 
-def main(heroku, render):
-    """
-    The main function. Connects to Heroku and ElephantSQL
-    using built-in Postgres functions
-    """
 
-    h = split_url(heroku)
-    r = split_url(render)
+def do_heroku(h):
+    """
+    Performs the dump of the Heroku data
+    """
 
     os.environ["PGPASSWORD"] = h.password
 
     print("Extracting the database from Heroku.")
 
-    try:
-        os.system(f"pg_dump --host={h.hostname} --username={h.username} \
-                    --dbname={h.path[1:]} -w > dump.sql")
-    except:
+    res = os.system(f"pg_dump --host={h.hostname} \
+        --username={h.username} --dbname={h.path[1:]} -w > dump.sql")
+
+    if res != 0:
         print("An error occurred connecting to Heroku.")
         sys.exit(2)
-    
-    print("Extraction successful. File saved to dump.sql.")
-    print("Modifying the downloaded data.")
 
-    parse_dump(h.username, h.path[1:], r.username, r.path[1:])
+    print("Extraction successful. File saved to dump.sql.")
+
+
+def do_render(r):
+    """
+    Uploads the modified data to Render/ElephantSQL
+    """
 
     print("Uploading to ElephantSQL")
 
     os.environ["PGPASSWORD"] = r.password
 
-    try:
-        os.system(f"psql --host={r.hostname} --username={r.username} \
-                    --dbname={r.path[1:]} -w < dump.sql >/dev/null 2>&1")
-    except:
+    res = os.system(f"psql --host={r.hostname} --username={r.username} \
+                --dbname={r.path[1:]} -w < dump.sql >/dev/null 2>&1")
+
+    if res != 0:
         print("Error uploading the data to ElephantSQL")
         sys.exit(2)
 
     print("Upload complete. Please check your ElephantSQL database")
+
+
+def main(h_url, r_url):
+    """
+    The main function. Connects to Heroku and ElephantSQL
+    using built-in Postgres functions
+    """
+
+    h = split_url(h_url)
+    r = split_url(r_url)
+
+    do_heroku(h)
+
+    print("Modifying the downloaded data.")
+
+    parse_dump(h.username, h.path[1:], r.username, r.path[1:])
+
+    do_render(r)
 
 
 if __name__ == "__main__":
@@ -98,5 +123,5 @@ if __name__ == "__main__":
     else:
         heroku = input("Paste your Heroku DATABASE_URL here: ")
         render = input("Paste your ElephantSQL DATABASE_URL here: ")
-    
+
     main(heroku, render)
