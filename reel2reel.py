@@ -50,6 +50,9 @@ def parse_dump(h_user, h_db, r_user, r_db):
         data = re.sub(h_db, r_db, data)
 
     with open("dump.sql", "w", encoding="utf8") as f:
+        # Why not just open the file as r+ earlier and
+        # f.seek(0) to the beginning? Because not all of the 
+        # file would get overwritten.
         f.write(data)
 
 
@@ -88,7 +91,7 @@ def do_render(r):
         print("Error: Cannot upload the data to ElephantSQL.")
         sys.exit(2)
 
-    print("Upload complete. Please check your ElephantSQL database")
+    print("Upload complete. Please check your ElephantSQL database.")
 
 
 def main(h_url, r_url):
@@ -113,8 +116,8 @@ if __name__ == "__main__":
     print("Code Institute, 2022\n")
 
     if len(sys.argv) == 2:
-        print("You can supply the Heroku and Render URLs as arguments")
-        print("Usage: python3 reel2reel.py <Heroku DB URL> <Render DB URL>")
+        print("You can supply the Heroku and ElephantSQL URLs as arguments")
+        print("Usage: python3 reel2reel.py <Heroku DB URL> <Elephant DB URL>")
         sys.exit(1)
     if len(sys.argv) > 1:
         heroku = sys.argv[1]
