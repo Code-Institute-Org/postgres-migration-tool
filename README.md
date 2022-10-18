@@ -11,7 +11,7 @@ This is a tool for Code Institute students and alumni. It allows you to dump a d
 You will need to have created a new database on ElephantSQL.
 
 1. Open this repo in Gitpod
-2. Run `python3 reel2reel.py`
+2. Run `reel2reel`
 3. In a different browser tab, go to your app in Heroku and select the *Settings* tab
 4. Click the *Reveal Config Vars* button
 5. Copy the value in the `DATABASE_URL` Config Var. It will start with `postgres://`
@@ -35,7 +35,7 @@ Yes, but we'd really prefer you to use it with Gitpod. This repo has the latest 
 
 Absolutely. You can supply the URLs as arguments like so:
 
-`python3 reel2reel.py <Heroku URL> <Render URL>`
+`reel2reel <Heroku URL> <Render URL>`
 
 *What does it actually do?*
 
