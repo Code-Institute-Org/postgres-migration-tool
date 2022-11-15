@@ -51,7 +51,7 @@ def parse_dump(h_user, h_db, r_user, r_db):
 
     with open("dump.sql", "w", encoding="utf8") as f:
         # Why not just open the file as r+ earlier and
-        # f.seek(0) to the beginning? Because not all of the 
+        # f.seek(0) to the beginning? Because not all of the
         # file would get overwritten.
         f.write(data)
 
