@@ -22,8 +22,8 @@ You will need to have created a new database on ElephantSQL.
 
 ## Problems
 
-Ensure that the URLs are copied correctly. Reel2Reel will throw an error if the URL doesn't start with `postgres://`.
-Make sure that you run the process as soon as you copy the Heroku `DATABASE_URL`. Heroku periodically rotates the credentials, which means an old `DATABASE_URL` may not work.
+- Ensure that the URLs are copied correctly. Reel2Reel will throw an error if the URL doesn't start with `postgres://`.
+- Make sure that you run the process as soon as you copy the Heroku `DATABASE_URL`. Heroku periodically rotates the credentials, which means an old `DATABASE_URL` may not work.
 
 ## FAQs
 
