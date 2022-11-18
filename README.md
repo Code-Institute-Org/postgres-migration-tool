@@ -35,7 +35,7 @@ Yes, but we'd really prefer you to use it with Gitpod. This repo has the latest 
 
 Absolutely. You can supply the URLs as arguments like so:
 
-`reel2reel <Heroku URL> <ElephentSQL URL>`
+`reel2reel <Heroku URL> <ElephantSQL URL>`
 
 *What does it actually do?*
 
