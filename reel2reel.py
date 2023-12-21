@@ -1,9 +1,9 @@
 """
-Reel2Reel - a script to move a database from Heroku to ElephantSQL
-because we like to move it, move it.
+Reel2Reel - a script to move a database from one Postgres
+server to to another because we like to move it, move it.
 
 Usage:
-    python3 reel2reel.py <Heroku URL> <ElephantSQL URL>
+    python3 reel2reel.py <Source URL> <Destination URL>
     or interactively:
     python3 reel2reel.py
 
@@ -56,74 +56,74 @@ def parse_dump(h_user, h_db, e_user, e_db):
         f.write(data)
 
 
-def do_heroku(h):
+def do_source(s):
     """
-    Performs the dump of the Heroku data
+    Performs the dump of the source data
     """
 
-    os.environ["PGPASSWORD"] = h.password
+    os.environ["PGPASSWORD"] = s.password
 
-    print("Extracting the database from Heroku.")
+    print("Extracting the source database.")
 
-    res = os.system(f"pg_dump --host={h.hostname} \
-        --username={h.username} --dbname={h.path[1:]} -w > dump.sql")
+    res = os.system(f"pg_dump --host={s.hostname} \
+        --username={s.username} --dbname={s.path[1:]} -w > dump.sql")
 
     if res != 0:
-        print("Error: Cannot connect to Heroku.")
+        print("Error: Cannot connect to source database server.")
         sys.exit(2)
 
     print("Extraction successful. File saved to dump.sql.")
 
 
-def do_elephant(e):
+def do_dest(d):
     """
-    Uploads the modified data to Render/ElephantSQL
+    Uploads the modified data to the destination server
     """
 
-    print("Uploading to ElephantSQL")
+    print("Uploading to destination server")
 
-    os.environ["PGPASSWORD"] = e.password
+    os.environ["PGPASSWORD"] = d.password
 
-    res = os.system(f"psql --host={e.hostname} --username={e.username} \
-                --dbname={e.path[1:]} -w < dump.sql >/dev/null 2>&1")
+    res = os.system(f"psql --host={d.hostname} --username={d.username} \
+                --dbname={d.path[1:]} -w < dump.sql >/dev/null 2>&1")
 
     if res != 0:
-        print("Error: Cannot upload the data to ElephantSQL.")
+        print("Error: Cannot upload the data to destination.")
         sys.exit(2)
 
-    print("Upload complete. Please check your ElephantSQL database.")
+    print("Upload complete. Please check your destination database.")
 
 
-def main(h_url, r_url):
+def main(s_url, d_url):
     """
     The main function. Calls other functions to perform the migration
     """
 
-    h = split_url(h_url)
-    e = split_url(r_url)
+    s = split_url(s_url)
+    d = split_url(d_url)
 
-    do_heroku(h)
+    do_source(s)
 
     print("Modifying the downloaded data.")
 
-    parse_dump(h.username, h.path[1:], e.username, e.path[1:])
+    parse_dump(s.username, s.path[1:], d.username, d.path[1:])
 
-    do_elephant(e)
+    do_dest(d)
 
 
 if __name__ == "__main__":
-    print("Reel2Reel - Heroku to ElephantSQL Mover")
+    print("Reel2Reel - PostgreSQL to PostgreSQL Mover")
     print("Code Institute, 2022\n")
 
     if len(sys.argv) == 2:
-        print("You can supply the Heroku and ElephantSQL URLs as arguments")
-        print("Usage: python3 reel2reel.py <Heroku DB URL> <Elephant DB URL>")
+        print("You can supply the source and destination URLs as arguments")
+        print("Usage: python3 reel2reel.py <Source DB URL> <Destination DB URL>")
         sys.exit(1)
     if len(sys.argv) > 1:
-        heroku = sys.argv[1]
-        elephant = sys.argv[2]
+        source = sys.argv[1]
+        dest = sys.argv[2]
     else:
-        heroku = input("Paste your Heroku DATABASE_URL here: ")
-        elephant = input("Paste your ElephantSQL DATABASE_URL here: ")
+        source = input("Paste your source DATABASE_URL here: ")
+        dest = input("Paste your destination DATABASE_URL here: ")
 
-    main(heroku, elephant)
+    main(source, dest)
