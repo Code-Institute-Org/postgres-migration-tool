@@ -14,7 +14,7 @@ You will need to have created a new database using our [Database Creator app](ht
 2. Run `python3 reel2reel.py` (Note: If you use Gitpod or Codeanywhere/Daytona, you can simply type `reel2reel`)
 3. Paste in the database URL of the source database - the one you want to copy from. It will start with `postgres://`
 4. Now paste in the database URL of the target database, probably the one created by the Database Creator app. Again, it will start with `postgres://`
-5. The data will now be downloaded from Heroku and uploaded to your ElephantSQL database
+5. The data will now be downloaded from the source database and uploaded to your new target database.
 
 ## Problems
 
