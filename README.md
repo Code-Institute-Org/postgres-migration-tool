@@ -10,8 +10,8 @@ This is a tool for Code Institute students and alumni. It allows you to dump a d
 
 You will need to have created a new database using our [Database Creator app](https://dbs.ci-dbs.net).
 
-1. Open this repo in Gitpod
-2. Run `reel2reel`
+1. Open this repo in your chosen IDE
+2. Run `python3 reel2reel.py` (Note: If you use Gitpod or Codeanywhere/Daytona, you can simply type `reel2reel`)
 3. Paste in the database URL of the source database - the one you want to copy from. It will start with `postgres://`
 4. Now paste in the database URL of the target database, probably the one created by the Database Creator app. Again, it will start with `postgres://`
 5. The data will now be downloaded from Heroku and uploaded to your ElephantSQL database
@@ -31,7 +31,7 @@ Yes, you will need to install the latest versions of the Postgres command line c
 
 Absolutely. You can supply the URLs as arguments like so:
 
-`reel2reel <Source URL> <Destination URL>`
+`python3 reel2reel.py <Source URL> <Destination URL>`
 
 *What does it actually do?*
 
