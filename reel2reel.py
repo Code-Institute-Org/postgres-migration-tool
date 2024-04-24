@@ -23,7 +23,7 @@ def split_url(db_url):
     parses it using urllib
     """
 
-    if db_url[0:11] != "postgres://":
+    if db_url[0:11] != "postgres://" and db_url[0:13] != "postgresql://":
         print("Error: The URL seems incorrectly formatted.")
         sys.exit(1)
 
